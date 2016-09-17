@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Todos list</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+
+<ion-content padding class="todos">
+
+  <div id="todos-list">
+    <div
+      *ngFor="let todo of dataStore.todos trackBy: todo?.id"
+      class="todo-item"
+    ></div>
+  </div>
+
+</ion-content>
+
+<button
+  fab fab-bottom fab-right
+  (click)="addTodo()"
+  style="z-index: 100;"
+>
+  <ion-icon name="add-circle"></ion-icon>
+</button>
+
