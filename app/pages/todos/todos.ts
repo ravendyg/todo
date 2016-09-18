@@ -93,8 +93,8 @@ window['tt'] = self;
         {
           self.priorityFilterValue = newPriority;
           self.dataStore
-
-        }
+        },
+        priority: self.priorityFilterValue
       }
     );
     popover.present( { ev: event } );
