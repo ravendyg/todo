@@ -1,5 +1,6 @@
 /// <reference path="./types.d.ts" />
-import { Component } from '@angular/core';
+import { Component, enableProdMode } from '@angular/core';
+enableProdMode();
 import { Platform, ionicBootstrap } from 'ionic-angular';
 import { StatusBar } from 'ionic-native';
 import { TodosPage } from './pages/todos/todos';

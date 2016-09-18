@@ -46,7 +46,12 @@ class DataStorageService implements OnInit
         {
           self._initDb()
           .then(  () => self._readFromDb() )
-          .then(  () => resolve(true) )
+          .then(
+            () =>
+            {
+              resolve(true);
+            }
+          )
           .catch( () => resolve(false) );
         }
       );
@@ -196,16 +201,30 @@ class DataStorageService implements OnInit
         {
 				  var transaction = _db.transaction( _todosStoreName, 'readwrite');
           var store = transaction.objectStore( _todosStoreName );
-          var request = store['getAll']();  // smth is wrong with typings
-          request.addEventListener(
+          var cursorRequest = store.openCursor();
+          // var request = store.getAll();  // doesn't work for 4.4
+          cursorRequest.addEventListener(
             'success',
-            () =>
+            event =>
             {
-              self.dataStore.todos = request.result;
+              var cursor = cursorRequest.result;
+              if ( cursor )
+              {
+                self.dataStore.todos.push( cursor.value );
+                self._id = cursor.value.id > self._id ? cursor.value.id : self._id;
+                // console.log(cursor);
+                cursor.continue();
+              }
+              else
+              { // exhausted
+                self.dataStore.todos = self.dataStore.todos.slice();  // force update
+                resolve(true);
+              }
+              // self.dataStore.todos = request.result;
               // get last id
-              self._id =
-                self.dataStore.todos
-                .reduce( (acc, e) => acc < e.id ? e.id : acc, 0 );
+
+                // self.dataStore.todos
+                // .reduce( (acc, e) => acc < e.id ? e.id : acc, 0 );
 // self.dataStore.todos = self.dataStore.todos.concat([{
 //   id: ++self._id,
 //   title: 'todo1',
@@ -214,10 +233,10 @@ class DataStorageService implements OnInit
 //   doneDate: '',
 //   targetDate: '2016-09-15T00:00:00Z'
 // }]);
-              resolve(true);
+
             }
           );
-          request.addEventListener(
+          cursorRequest.addEventListener(
             'error',
             () =>
             {
