@@ -227,7 +227,18 @@ class DataStorageService implements OnInit
           try
           {
             var strData = localStorage.getItem('todos-app-data');
-            self.dataStore.todos = JSON.parse( strData );
+            self.dataStore.todos = JSON.parse( strData ) || [];
+            self._id =
+              self.dataStore.todos
+              .reduce( (acc, e) => acc < e.id ? e.id : acc, 0 );
+// self.dataStore.todos = self.dataStore.todos.concat([{
+//   id: ++self._id,
+//   title: 'todo1',
+//   description: 'sdfsd',
+//   priority: Importance.AVERAGE_PRIORITY,
+//   doneDate: '',
+//   targetDate: '2016-09-15T00:00:00Z'
+// }]);
             resolve(true);
           }
           catch (e)
