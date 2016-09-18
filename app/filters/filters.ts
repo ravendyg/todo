@@ -76,3 +76,27 @@ class CapFirstLetters implements PipeTransform
 		return out;
   }
 }
+
+@Pipe({
+	name: 'dateFilter'
+})
+export /**
+ * DateFilter
+ */
+class DateFilter implements PipeTransform
+{
+	constructor ()
+	{
+	}
+
+	public transform ( date: string ): string
+  {
+    var out =
+			date
+			.replace('T', ' - ')
+			.replace(/\:[0-9]{2}Z$/, '')
+			;
+
+		return out;
+  }
+}

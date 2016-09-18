@@ -13,11 +13,16 @@ class UtilsService
 	{
 	}
 
-	public indentMonth (month: number): string
+	public indentMonth ( month: number): string
   {
     var tempMonth = '' + (month + 1);
     return tempMonth.length === 1 ? '0' + tempMonth : tempMonth;
   }
+
+	public indentTime ( time: number ): string
+	{
+		return time < 10 ? '0' + time : '' + time;
+	}
 
 	public getDate (): string
 	{
@@ -25,7 +30,9 @@ class UtilsService
     var tDate =
       now.getFullYear() + '-' +
       this.indentMonth( now.getMonth() ) + '-' +
-      now.getDate();
+      this.indentTime( now.getDate() ) +
+			'T' + this.indentTime( now.getHours() ) + ':' +
+			this.indentTime( now.getMinutes() ) + ':00Z';
 
 		return tDate;
 	}

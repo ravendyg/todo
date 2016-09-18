@@ -40,12 +40,14 @@ export class EditTodoModal
     this.minDate =
       now.getFullYear() + '-' +
       utils.indentMonth( now.getMonth() )+ '-' +
-      now.getDate();
+      now.getDate() +
+      'T00:00:00Z';
     var future = new Date( now.getTime() + 1000 * 60 * 60 * 24 * 365 );
     this.maxDate =
       future.getFullYear() + '-' +
       utils.indentMonth( future.getMonth() ) + '-' +
-      future.getDate();
+      future.getDate() +
+      'T23:59:00Z';
 
     this._data = data;
   }

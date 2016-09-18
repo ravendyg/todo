@@ -23,6 +23,13 @@
       <ion-item (click)="editTodo(todo.id)">
         <h2>{{todo.title}}</h2>
         <p>{{todo.description}}</p>
+        <p
+          [style.color]="todo.targetDate < nowDate ? 'red' : ''"
+          *ngIf="todo.targetDate.length > 0"
+        >
+          Due: {{todo.targetDate| dateFilter}}
+        </p>
+        <p *ngIf="todo.doneDate">Done: {{todo.doneDate | dateFilter}}</p>
         <p>
           <ion-badge
             *ngIf="todo.priority > 1"
@@ -31,15 +38,6 @@
             {{todo.priority === 2 ? 'HIGH' : 'IMPORTANT'}}
           </ion-badge>
         </p>
-        <ion-note item-right>
-          <p
-            [style.color]="todo.targetDate < nowDate ? 'red' : ''"
-            *ngIf="todo.targetDate.length > 0"
-          >
-            Due: {{todo.targetDate}}
-          </p>
-          <p *ngIf="todo.doneDate">Done: {{todo.doneDate}}</p>
-        </ion-note>
 
       </ion-item>
       <ion-item-options side="right">

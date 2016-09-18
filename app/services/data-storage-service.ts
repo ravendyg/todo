@@ -209,7 +209,7 @@ class DataStorageService implements OnInit
 //   description: 'sdfsd',
 //   priority: Importance.AVERAGE_PRIORITY,
 //   doneDate: '',
-//   targetDate: '2016-09-15'
+//   targetDate: '2016-09-15T00:00:00Z'
 // }]);
               resolve(true);
             }

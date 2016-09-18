@@ -7,7 +7,7 @@ import { TodosPage } from './pages/todos/todos';
 import { DataStorageService } from './services/data-storage-service';
 import { UtilsService } from './services/utils-service';
 
-import { OrderByDueDate, PriorityFilter, CapFirstLetters } from './filters/filters';
+import { OrderByDueDate, PriorityFilter, CapFirstLetters, DateFilter } from './filters/filters';
 
 
 @Component({
@@ -35,5 +35,6 @@ ionicBootstrap(
     UtilsService,
     OrderByDueDate,
     PriorityFilter,
-    CapFirstLetters
+    CapFirstLetters,
+    DateFilter
   ]);

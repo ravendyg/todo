@@ -6,14 +6,14 @@ import { ModalController, NavParams, PopoverController } from 'ionic-angular';
 import { UtilsService } from '../../services/utils-service';
 import { DataStorageService } from '../../services/data-storage-service';
 
-import { OrderByDueDate, PriorityFilter } from './../../filters/filters';
+import { OrderByDueDate, PriorityFilter, DateFilter } from './../../filters/filters';
 
 import { EditTodoModal } from '../edit-todo/edit-todo';
 import { PrioritySelector } from '../priority-selector';
 
 
 @Component({
-  pipes: [ OrderByDueDate, PriorityFilter ],
+  pipes: [ OrderByDueDate, PriorityFilter, DateFilter ],
   templateUrl: 'build/pages/todos/todos.html'
 })
 export class TodosPage implements OnInit
