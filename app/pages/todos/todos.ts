@@ -1,24 +1,24 @@
 /// <reference path="./../../types.d.ts" />
 
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavParams } from 'ionic-angular';
+import { ModalController, NavParams, PopoverController } from 'ionic-angular';
 
 import { UtilsService } from '../../services/utils-service';
 import { DataStorageService } from '../../services/data-storage-service';
 
-import { OrderByDueDate } from './../../filters/filters';
+import { OrderByDueDate, PriorityFilter } from './../../filters/filters';
 
 import { EditTodoModal } from '../edit-todo/edit-todo';
-// import { HomePage } from '../home/home';
-// import { AboutPage } from '../about/about';
-// import { ContactPage } from '../contact/contact';
+import { PrioritySelector } from '../priority-selector';
+
 
 @Component({
-  pipes: [ OrderByDueDate ],
+  pipes: [ OrderByDueDate, PriorityFilter ],
   templateUrl: 'build/pages/todos/todos.html'
 })
 export class TodosPage implements OnInit
 {
+  private popover: PopoverController;
   public dataStore: { todos: Todo [] };
 
   public alert: { color: string };
@@ -26,19 +26,20 @@ export class TodosPage implements OnInit
   public dataLoaded: boolean;
   public nowDate: string;
 
-  // public tab1Root: any;
-  // public tab2Root: any;
-  // public tab3Root: any;
+  public priorityFilterValue: number;
 
   constructor (
     private _data: DataStorageService,
     private _modalCtrl: ModalController,
-    private _utils: UtilsService
+    private _utils: UtilsService,
+    private _popover: PopoverController
   )
   {
     var self = this;
 window['tt'] = self;
     this.dataLoaded = false;
+
+    this.popover = _popover;
 
     _data.subscribeForDataLoadedEvent()
     .then(
@@ -54,12 +55,13 @@ window['tt'] = self;
       _utils.indentMonth( now.getMonth() )+ '-' +
       now.getDate();
 
-    this.alert = { color: 'red' };
   }
 
   public ngOnInit (): void
   {
     this.dataStore = this._data.dataStore;
+
+    this.priorityFilterValue = 0;
   }
 
   public addTodo (): void
@@ -76,6 +78,24 @@ window['tt'] = self;
       );
       todoModal.present();
     }
+  }
+
+  public presentPrioritySelector ( event: any ): void
+  {
+    var self = this;
+
+    var popover = this.popover.create(
+      PrioritySelector,
+      {
+        cb: newPriority =>
+        {
+          self.priorityFilterValue = newPriority;
+          self.dataStore
+
+        }
+      }
+    );
+    popover.present( { ev: event } );
   }
 
 }

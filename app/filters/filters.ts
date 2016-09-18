@@ -28,3 +28,26 @@ class OrderByDueDate implements PipeTransform
 		return out;
   }
 }
+
+@Pipe({
+	name: 'priorityFilter'
+})
+export /**
+ * PriorityFilter
+ */
+class PriorityFilter implements PipeTransform
+{
+	constructor ()
+	{
+	}
+
+	public transform (array: Todo [], priorityVal: number): Todo []
+  {
+    var out =
+			array
+			.filter(
+				(e: Todo) => priorityVal === 0 || e.priority === priorityVal ? true : false
+			);
+		return out;
+  }
+}
