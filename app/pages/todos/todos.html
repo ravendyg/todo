@@ -24,6 +24,14 @@
       <ion-item>
         <h2>{{todo.title}}</h2>
         <p>{{todo.description}}</p>
+        <p>
+          <ion-badge
+            *ngIf="todo.priority > 1"
+            [style.backgroundColor]="todo.priority === 2 ? 'green' : 'red'"
+          >
+            {{todo.priority === 2 ? 'HIGH' : 'IMPORTANT'}}
+          </ion-badge>
+        </p>
         <ion-note item-right>
           <p
             [style.color]="todo.targetDate < nowDate ? 'red' : ''"
@@ -33,6 +41,7 @@
           </p>
           <p *ngIf="todo.doneDate">Done: {{todo.doneDate}}</p>
         </ion-note>
+
       </ion-item>
       <ion-item-options side="right">
         <button danger>
