@@ -51,3 +51,28 @@ class PriorityFilter implements PipeTransform
 		return out;
   }
 }
+
+@Pipe({
+	name: 'capFirstLetters'
+})
+export /**
+ * CapFirstLetters
+ */
+class CapFirstLetters implements PipeTransform
+{
+	constructor ()
+	{
+	}
+
+	public transform (input: string): string
+  {
+    var out =
+			input
+			.split(' ')
+			.map( e => e.charAt(0).toUpperCase() + e.slice(1) )
+			.join(' ')
+			;
+
+		return out;
+  }
+}

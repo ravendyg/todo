@@ -77,9 +77,28 @@ class DataStorageService implements OnInit
 		return newTodo;
 	}
 
-	public save ( newTodo: Todo ): void
+	public save ( newTodo: Todo, mode: string ): void
 	{
-		this.dataStore.todos = this.dataStore.todos.concat([ newTodo ]);
+    if ( mode === 'edit' )
+    {
+      for ( var i = 0; i < this.dataStore.todos.length; i++ )
+      {
+        if ( this.dataStore.todos[i].id === newTodo.id )
+        {
+          break;
+        }
+      }
+      this.dataStore.todos =
+        this.dataStore.todos
+        .slice(0, i)
+        .concat([ newTodo ])
+        .concat( this.dataStore.todos.slice( i+1 ))
+        ;
+    }
+    else
+    {
+		  this.dataStore.todos = this.dataStore.todos.concat([ newTodo ]);
+    }
 		this._saveToDb( newTodo );
 	}
 

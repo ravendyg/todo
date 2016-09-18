@@ -6,7 +6,7 @@ import { ViewController, NavParams } from 'ionic-angular';
 
 @Component({
   template: `
-    <ion-list>
+    <ion-list style="margin: 0;">
       <button ion-item (click)="select(0)">All</button>
       <button ion-item (click)="select(1)">Normal</button>
       <button ion-item (click)="select(2)">High</button>

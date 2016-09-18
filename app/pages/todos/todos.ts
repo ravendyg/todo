@@ -64,17 +64,19 @@ window['tt'] = self;
     this.priorityFilterValue = 0;
   }
 
-  public addTodo (): void
+  public editTodo ( id?: number): void
   {
     if ( this.dataLoaded )
     {
-      console.log('adding');
+      var todo =
+        id
+        ? this.dataStore.todos.find( e => e.id === id )
+        : this._data.generateEmptyTodo()
+        ;
+      var mode = id ? 'edit' : 'add';
+
       var todoModal = this._modalCtrl.create(
-        EditTodoModal,
-        {
-          todo: this._data.generateEmptyTodo(),
-          mode: 'add'
-        }
+        EditTodoModal, { todo, mode }
       );
       todoModal.present();
     }

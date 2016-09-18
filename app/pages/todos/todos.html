@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Todos list</ion-title>
+    <ion-title>Todos List</ion-title>
 
     <ion-buttons start>
       <button (click)="presentPrioritySelector($event)">
@@ -12,16 +12,15 @@
 </ion-header>
 
 
-
 <ion-content padding class="todos">
 
-  <ion-list id="todos-list">
+  <ion-list id="todos-list" style="padding-bottom: 60px;">
     <ion-item-sliding
       *ngFor="let todo of dataStore.todos |
       orderByDueDate | priorityFilter:priorityFilterValue trackBy: todo?.id"
       class="todo-item"
     >
-      <ion-item>
+      <ion-item (click)="editTodo(todo.id)">
         <h2>{{todo.title}}</h2>
         <p>{{todo.description}}</p>
         <p>
@@ -61,7 +60,7 @@
 <button
   fab fab-bottom fab-right
   *ngIf="dataLoaded"
-  (click)="addTodo()"
+  (click)="editTodo()"
   style="z-index: 100;"
 >
   <ion-icon name="add-circle"></ion-icon>

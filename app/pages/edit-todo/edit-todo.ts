@@ -4,7 +4,10 @@ import { Platform, NavParams, ViewController } from 'ionic-angular';
 import { DataStorageService } from '../../services/data-storage-service';
 import { UtilsService } from '../../services/utils-service';
 
+import { CapFirstLetters } from './../../filters/filters';
+
 @Component({
+  pipes: [ CapFirstLetters ],
   templateUrl: 'build/pages/edit-todo/edit-todo.html'
 })
 export class EditTodoModal
@@ -27,19 +30,8 @@ export class EditTodoModal
     private data: DataStorageService
   )
   {
-    // this._utils = utils;
-
-    if ( _params.get('mode') === 'add' )
-    {
-      this.action = 'Add todo';
-    }
-    else
-    {
-      this.action = 'Edit todo';
-    }
-
+    this.action = _params.get('mode');
     this.todo = _params.get('todo');
-    console.log(this.todo);
 
     this._view = view;
 
@@ -63,11 +55,11 @@ export class EditTodoModal
     this.todo.priority = newPriority;
   }
 
-  public save ()
+  public save (): void
   {
     if ( this.todo.title.length > 0 )
     {
-      this._data.save( this.todo );
+      this._data.save( this.todo, this.action );
       this._view.dismiss();
     }
   }
