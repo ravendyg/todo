@@ -35,12 +35,6 @@ class DataStorageService implements OnInit
 
 		this._utils = utils;
 
-		var now = new Date();
-    var tDate =
-      now.getFullYear() + '-' +
-      utils.indentMonth( now.getMonth() )+ '-' +
-      now.getDate();
-
 		this.dataStore =
 		{
 			todos: []
@@ -106,6 +100,20 @@ class DataStorageService implements OnInit
 	{
 		return this._dataLoaded;
 	}
+
+  public toggleTodo ( id: number ): void
+  {
+    var targetTodo = this.dataStore.todos.find( e => e.id === id );
+    if ( targetTodo.doneDate )
+    {
+      targetTodo.doneDate = '';
+    }
+    else
+    {
+      targetTodo.doneDate = this.utils.getDate();
+    }
+    this.save( targetTodo, 'edit' );
+  }
 
   private _initDb (): Promise<boolean>
   {
@@ -177,14 +185,14 @@ class DataStorageService implements OnInit
               self._id =
                 self.dataStore.todos
                 .reduce( (acc, e) => acc < e.id ? e.id : acc, 0 );
-self.dataStore.todos = self.dataStore.todos.concat([{
-  id: ++self._id,
-  title: 'todo1',
-  description: 'sdfsd',
-  priority: Importance.AVERAGE_PRIORITY,
-  doneDate: '',
-  targetDate: '2016-09-15'
-}]);
+// self.dataStore.todos = self.dataStore.todos.concat([{
+//   id: ++self._id,
+//   title: 'todo1',
+//   description: 'sdfsd',
+//   priority: Importance.AVERAGE_PRIORITY,
+//   doneDate: '',
+//   targetDate: '2016-09-15'
+// }]);
               resolve(true);
             }
           );

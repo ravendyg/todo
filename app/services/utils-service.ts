@@ -19,4 +19,15 @@ class UtilsService
     return tempMonth.length === 1 ? '0' + tempMonth : tempMonth;
   }
 
+	public getDate (): string
+	{
+		var now = new Date();
+    var tDate =
+      now.getFullYear() + '-' +
+      this.indentMonth( now.getMonth() ) + '-' +
+      now.getDate();
+
+		return tDate;
+	}
+
 }

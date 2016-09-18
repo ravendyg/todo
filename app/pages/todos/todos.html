@@ -44,12 +44,24 @@
       </ion-item>
       <ion-item-options side="right">
         <button danger>
-          <ion-icon name="close"></ion-icon>
+          <ion-icon name="close" (click)="deleteTodo(todo.id)"></ion-icon>
           Delete
         </button>
-        <button secondary>
+        <button
+          secondary
+          *ngIf="!todo.doneDate"
+           (click)="toggleTodo(todo.id)"
+        >
           <ion-icon name="checkmark"></ion-icon>
           Done
+        </button>
+        <button
+          secondary
+          *ngIf="todo.doneDate"
+           (click)="toggleTodo(todo.id)"
+          >
+          <ion-icon name="hammer"></ion-icon>
+          Do Again
         </button>
       </ion-item-options>
     </ion-item-sliding>

@@ -100,4 +100,9 @@ window['tt'] = self;
     popover.present( { ev: event } );
   }
 
+  public toggleTodo ( id: number ): void
+  {
+    this._data.toggleTodo( id );
+  }
+
 }
