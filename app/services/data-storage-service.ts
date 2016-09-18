@@ -3,6 +3,8 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Importance } from '../consts/enums';
 
+import { UtilsService } from './utils-service';
+
 var _db: IDBDatabase = null;
 var _dbName = 'todos';
 var _todosStoreName = 'todos';
@@ -15,14 +17,26 @@ class DataStorageService implements OnInit
 {
 	private _id: number;
 
+	private _utils: UtilsService;
+
 	public dataStore:
 	{
 		todos: Todo []
 	};
 
-	constructor ()
+	constructor (
+		private utils: UtilsService
+	)
 	{
 		this._id = 0;
+
+		this._utils = utils;
+
+		var now = new Date();
+    var tDate =
+      now.getFullYear() + '-' +
+      utils.indentMonth( now.getMonth() )+ '-' +
+      now.getDate();
 
 		this.dataStore =
 		{
@@ -32,8 +46,8 @@ class DataStorageService implements OnInit
 					title: 'todo1',
 					description: 'sdfsd',
 					priority: Importance.AVERAGE_PRIORITY,
-					doneDate: 0,
-					targetDate: Date.now() + 1000 * 60 * 2
+					doneDate: '',
+					targetDate: tDate
 				}
 			]
 		};
@@ -69,17 +83,28 @@ class DataStorageService implements OnInit
 
 	public generateEmptyTodo (): Todo
 	{
+		var now = new Date();
+    var tDate =
+      now.getFullYear() + '-' +
+      this._utils.indentMonth( now.getMonth() )+ '-' +
+      now.getDate();
+
 		var newTodo =
 		{
 			id: ++this._id,
 			title: '',
 			description: '',
 			priority: Importance.LOW_PRIORITY,
-			doneDate: 0,
-			targetDate: 0
+			doneDate: '',
+			targetDate: tDate
 		}
 
 		return newTodo;
+	}
+
+	public save ( newTodo: Todo ): void
+	{
+		this.dataStore.todos.push( newTodo );
 	}
 
 

@@ -6,6 +6,6 @@ declare type Todo =
 	title: string,
 	description: string,
 	priority: number,
-	targetDate: number,
-	doneDate: number
+	targetDate: string,
+	doneDate: string
 };

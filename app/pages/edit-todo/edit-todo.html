@@ -1,7 +1,54 @@
+<ion-header>
+  <ion-navbar (click)="debugClose()">
+    <ion-title>{{action}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
 <ion-content padding>
-  <h2>{{action}}</h2>
-  <p>{{todo.title}}</p>
-  <p>{{todo.description}}</p>
-  <p>{{todo.priority}}</p>
-  <div>sdfgdgfd</div>
+
+    <ion-item>
+      <ion-label
+        floating
+        [ngStyle]="todo.title.length > 0 ? {} : {'color': 'red'}"
+      >Title</ion-label>
+      <ion-input type="text" [(ngModel)]="todo.title"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Description</ion-label>
+      <ion-textarea rows="3" [(ngModel)]="todo.description"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <label class="list-c-label">Priority</label>
+      <div class="list-btn-holder">
+        <button
+          [color]="todo.priority === 1 ? 'secondary' : 'primary'"
+          (click)="setPriority(1)"
+        >Normal</button>
+        <button
+          [color]="todo.priority === 2 ? 'secondary' : 'primary'"
+          (click)="setPriority(2)"
+        >High</button>
+        <button
+          [color]="todo.priority === 3 ? 'secondary' : 'primary'"
+          (click)="setPriority(3)"
+        >Important</button>
+      </div>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Date</ion-label>
+      <ion-datetime
+        [min]="minDate"
+        [max]="maxDate"
+        displayFormat="MM/DD/YYYY"
+        [(ngModel)]="todo.targetDate"
+      ></ion-datetime>
+    </ion-item>
+
+    <div style="text-align: right; margin-top: 30px;">
+      <button (click)="save()">save</button>
+    </div>
+
 </ion-content>

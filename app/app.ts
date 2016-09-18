@@ -5,6 +5,7 @@ import { StatusBar } from 'ionic-native';
 import { TodosPage } from './pages/todos/todos';
 
 import { DataStorageService } from './services/data-storage-service';
+import { UtilsService } from './services/utils-service';
 
 
 @Component({
@@ -28,5 +29,6 @@ export class MyApp {
 ionicBootstrap(
   MyApp,
   [
-    DataStorageService
+    DataStorageService,
+    UtilsService
   ]);
