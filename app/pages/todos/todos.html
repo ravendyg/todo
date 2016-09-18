@@ -8,17 +8,42 @@
 
 <ion-content padding class="todos">
 
-  <div id="todos-list">
-    <div
-      *ngFor="let todo of dataStore.todos trackBy: todo?.id"
+  <ion-list id="todos-list">
+    <ion-item-sliding
+      *ngFor="let todo of dataStore.todos | orderByDueDate trackBy: todo?.id"
       class="todo-item"
-    ></div>
-  </div>
+    >
+      <ion-item>
+        <h2>{{todo.title}}</h2>
+        <p>{{todo.description}}</p>
+        <ion-note item-right>
+          <p
+            [style.color]="todo.targetDate < nowDate ? 'red' : ''"
+            *ngIf="todo.targetDate.length > 0"
+          >
+            Due: {{todo.targetDate}}
+          </p>
+          <p *ngIf="todo.doneDate">Done: {{todo.doneDate}}</p>
+        </ion-note>
+      </ion-item>
+      <ion-item-options side="right">
+        <button danger>
+          <ion-icon name="close"></ion-icon>
+          Delete
+        </button>
+        <button secondary>
+          <ion-icon name="checkmark"></ion-icon>
+          Done
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 
 </ion-content>
 
 <button
   fab fab-bottom fab-right
+  *ngIf="dataLoaded"
   (click)="addTodo()"
   style="z-index: 100;"
 >

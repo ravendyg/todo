@@ -7,6 +7,8 @@ import { TodosPage } from './pages/todos/todos';
 import { DataStorageService } from './services/data-storage-service';
 import { UtilsService } from './services/utils-service';
 
+import { OrderByDueDate } from './filters/filters';
+
 
 @Component({
   template: '<ion-nav [root]="rootPage"></ion-nav>'
@@ -30,5 +32,6 @@ ionicBootstrap(
   MyApp,
   [
     DataStorageService,
-    UtilsService
+    UtilsService,
+    OrderByDueDate
   ]);

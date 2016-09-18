@@ -1,4 +1,5 @@
 /// <reference path="./../types.d.ts" />
+'use strict';
 
 import { Injectable, OnInit } from '@angular/core';
 import { Importance } from '../consts/enums';
@@ -19,6 +20,8 @@ class DataStorageService implements OnInit
 
 	private _utils: UtilsService;
 
+	private _dataLoaded: Promise<boolean>;
+
 	public dataStore:
 	{
 		todos: Todo []
@@ -28,7 +31,7 @@ class DataStorageService implements OnInit
 		private utils: UtilsService
 	)
 	{
-		this._id = 0;
+    var self = this;
 
 		this._utils = utils;
 
@@ -40,55 +43,27 @@ class DataStorageService implements OnInit
 
 		this.dataStore =
 		{
-			todos: [
-				{
-					id: ++this._id,
-					title: 'todo1',
-					description: 'sdfsd',
-					priority: Importance.AVERAGE_PRIORITY,
-					doneDate: '',
-					targetDate: tDate
-				}
-			]
+			todos: []
 		};
+
+    this._dataLoaded =
+      new Promise(
+        resolve =>
+        {
+          self._initDb()
+          .then(  () => self._readFromDb() )
+          .then(  () => resolve(true) )
+          .catch( () => resolve(false) );
+        }
+      );
 	}
 
 	public ngOnInit (): void
 	{
-		var request = indexedDB.open(_dbName, 1);
-
-		request.addEventListener(
-			'upgradeneeded',
-			ev =>
-			{
-				_db = (<IDBOpenDBRequest>ev.target).result;
-
-				while ( _db.objectStoreNames.length > 0 )
-				{
-					_db.deleteObjectStore( _db.objectStoreNames[0] );
-				}
-
-				_db.createObjectStore( _todosStoreName );
-			}
-		);
-
-		request.addEventListener(
-			'success',
-			ev =>
-			{
-				_db = (<IDBOpenDBRequest>ev.target).result;
-			}
-		);
 	}
 
 	public generateEmptyTodo (): Todo
 	{
-		var now = new Date();
-    var tDate =
-      now.getFullYear() + '-' +
-      this._utils.indentMonth( now.getMonth() )+ '-' +
-      now.getDate();
-
 		var newTodo =
 		{
 			id: ++this._id,
@@ -96,7 +71,7 @@ class DataStorageService implements OnInit
 			description: '',
 			priority: Importance.LOW_PRIORITY,
 			doneDate: '',
-			targetDate: tDate
+			targetDate: ''
 		}
 
 		return newTodo;
@@ -104,7 +79,134 @@ class DataStorageService implements OnInit
 
 	public save ( newTodo: Todo ): void
 	{
-		this.dataStore.todos.push( newTodo );
+		this.dataStore.todos = this.dataStore.todos.concat([ newTodo ]);
+		this._saveToDb( newTodo );
+	}
+
+	public subscribeForDataLoadedEvent (): Promise<boolean>
+	{
+		return this._dataLoaded;
+	}
+
+  private _initDb (): Promise<boolean>
+  {
+    return new Promise(
+      (resolve, reject) =>
+      {
+        if ( indexedDB )	// hi Apple
+        {
+          var request = indexedDB.open(_dbName, 1);
+
+          request.addEventListener(
+            'upgradeneeded',
+            ev =>
+            {
+              _db = (<IDBOpenDBRequest>ev.target).result;
+
+              while ( _db.objectStoreNames.length > 0 )
+              {
+                _db.deleteObjectStore( _db.objectStoreNames[0] );
+              }
+
+              _db.createObjectStore( _todosStoreName );
+            }
+          );
+
+          request.addEventListener(
+            'success',
+            ev =>
+            {
+              _db = (<IDBOpenDBRequest>ev.target).result;
+              resolve(true);
+            }
+          );
+
+          request.addEventListener(
+            'error',
+            err =>
+            {
+              reject(err);
+            }
+          );
+        }
+        else
+        {
+          resolve(true);
+        }
+      }
+    );
+  }
+
+	private _readFromDb (): Promise<boolean>
+	{
+    var self = this;
+
+		return new Promise(
+			resolve =>
+			{
+        if ( indexedDB )
+        {
+				  var transaction = _db.transaction( _todosStoreName, 'readwrite');
+          var store = transaction.objectStore( _todosStoreName );
+          var request = store['getAll']();  // smth is wrong with typings
+          request.addEventListener(
+            'success',
+            () =>
+            {
+              self.dataStore.todos = request.result;
+              // get last id
+              self._id =
+                self.dataStore.todos
+                .reduce( (acc, e) => acc < e.id ? e.id : acc, 0 );
+self.dataStore.todos = self.dataStore.todos.concat([{
+  id: ++self._id,
+  title: 'todo1',
+  description: 'sdfsd',
+  priority: Importance.AVERAGE_PRIORITY,
+  doneDate: '',
+  targetDate: '2016-09-15'
+}]);
+              resolve(true);
+            }
+          );
+          request.addEventListener(
+            'error',
+            () =>
+            {
+              resolve(false);
+            }
+          );
+        }
+        else
+        {
+          try
+          {
+            var strData = localStorage.getItem('todos-app-data');
+            self.dataStore.todos = JSON.parse( strData );
+            resolve(true);
+          }
+          catch (e)
+          {
+            resolve(false);
+          }
+        }
+			}
+		);
+	}
+
+	private _saveToDb ( newTodo: Todo ): void
+	{
+		if ( indexedDB )
+		{
+			var transaction = _db.transaction( _todosStoreName, 'readwrite');
+			var store = transaction.objectStore( _todosStoreName );
+			var request = store.put( newTodo, newTodo.id );
+		}
+		else
+		{
+			var strTodos = JSON.stringify( this.dataStore.todos );
+			localStorage.setItem('todos-app-data', strTodos);
+		}
 	}
 
 
