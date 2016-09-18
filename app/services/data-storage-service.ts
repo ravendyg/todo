@@ -50,6 +50,8 @@ class DataStorageService implements OnInit
           .catch( () => resolve(false) );
         }
       );
+
+    this._id = 0;
 	}
 
 	public ngOnInit (): void
@@ -91,6 +93,7 @@ class DataStorageService implements OnInit
     }
     else
     {
+      newTodo.id = ++this._id;
 		  this.dataStore.todos = this.dataStore.todos.concat([ newTodo ]);
     }
 		this._saveToDb( newTodo );
