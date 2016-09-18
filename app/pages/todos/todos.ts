@@ -105,4 +105,9 @@ window['tt'] = self;
     this._data.toggleTodo( id );
   }
 
+  public deleteTodo( id: number ): void
+  {
+    this._data.deleteTodo( id );
+  }
+
 }

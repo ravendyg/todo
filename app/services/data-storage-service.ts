@@ -115,6 +115,24 @@ class DataStorageService implements OnInit
     this.save( targetTodo, 'edit' );
   }
 
+  public deleteTodo ( id: number ): void
+  {
+    var i;
+    for ( i = 0; i < this.dataStore.todos.length; i++ )
+    {
+      if ( this.dataStore.todos[i].id === id )
+      {
+        break;
+      }
+    }
+    this.dataStore.todos =
+      this.dataStore.todos.slice(0, i)
+      .concat( this.dataStore.todos.slice(i+1) )
+      ;
+
+    this._deleteFromDb( id );
+  }
+
   private _initDb (): Promise<boolean>
   {
     return new Promise(
@@ -228,6 +246,21 @@ class DataStorageService implements OnInit
 			var transaction = _db.transaction( _todosStoreName, 'readwrite');
 			var store = transaction.objectStore( _todosStoreName );
 			var request = store.put( newTodo, newTodo.id );
+		}
+		else
+		{
+			var strTodos = JSON.stringify( this.dataStore.todos );
+			localStorage.setItem('todos-app-data', strTodos);
+		}
+	}
+
+  private _deleteFromDb ( id: number ): void
+	{
+		if ( indexedDB )
+		{
+			var transaction = _db.transaction( _todosStoreName, 'readwrite');
+			var store = transaction.objectStore( _todosStoreName );
+			var request = store.delete( id );
 		}
 		else
 		{

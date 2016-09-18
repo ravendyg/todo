@@ -43,8 +43,11 @@
 
       </ion-item>
       <ion-item-options side="right">
-        <button danger>
-          <ion-icon name="close" (click)="deleteTodo(todo.id)"></ion-icon>
+        <button
+          danger
+          (click)="deleteTodo(todo.id)"
+        >
+          <ion-icon name="close"></ion-icon>
           Delete
         </button>
         <button
